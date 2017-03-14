@@ -1,0 +1,11 @@
+{
+  "name": "socket-chat-app",
+  "version": "0.0.1",
+  "description": "socket.io chat application",
+  "dependencies": {
+    "body-parser": "*",
+    "express": "*",
+    "path": "*",
+    "socket.io": "*"
+  }
+}
