@@ -10,8 +10,11 @@ function msgOutput(msgObj) {
 	let userMsg = document.createElement("li");
 	let userName = document.createElement("span");
 
+	if(msgObj.userID == getCookie("id")) {
+		userName.style.fontWeight = "bold";
+	}
 	userName.style.color = "#" + msgObj.colour;
-	userMsgCon.appendChild(userMsg).appendChild(userName).textContent = msgObj.time + " " + msgObj.msg;
+	userMsgCon.appendChild(userMsg).appendChild(userName).textContent = msgObj.time + " " + msgObj.username + ": " + msgObj.msg;
 };
 
 function newSession(array) {
@@ -38,27 +41,33 @@ function getCookie(cname) {
     return "";
 }
 
-function cookieHandler(user, currUserIdCount) {
+function cookieHandler(user, currUserIdCount, usernameCount) {
 	let cookie = document.cookie;
 	
 	if (cookie == '') {
+		let currUsername = "User" + usernameCount;
+
 		document.cookie = "id=" + currUserIdCount;
+		document.cookie = "username=" + currUsername;
+
 		console.log("Cookie created with ID: " + currUserIdCount);
-		user.id = currUserIdCount;
-		user.status = "o";
-		user.colour = "000000"
+
+		user = {
+   			id: currUserIdCount,
+    		name: currUsername,
+    		colour: "000000",
+    		status: "o"
+		};
 		
 		socket.emit('user id used', user);		
 	} else {
-		let userID = getCookie("id");
 		console.log("Cookie value: " + document.cookie);
-		console.log("User ID: " + userID);
 	}
 };
 
 chatForm.submit(function(){
 	if(chatMessage.val() != '') {
-		socket.emit('chat message', {id: getCookie("id"), msg: chatMessage.val()});
+		socket.emit('chat message', {id: getCookie("id"), name: getCookie("username"), msg: chatMessage.val()});
 		chatMessage.val(''); 
 	}
 	return false;
@@ -74,5 +83,5 @@ socket.on('chat message', function(data){
 });
 
 socket.on('cookies', function(data){
-	cookieHandler(data.userObj, data.userCount);
+	cookieHandler(data.userObj, data.userCount, data.usernameCount);
 });

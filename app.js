@@ -18,6 +18,8 @@ let user = {
     status: ""
 };
 
+let userCounter = 1;
+
 let msgArray = [];
 let userArray = [];
 let currUserIdCount = 0;
@@ -64,25 +66,29 @@ io.on('connection', function(socket){
 	io.emit('refresh session', msgArray);
 
 	// Emit cookie check
-	io.emit('cookies', {userObj: user, userCount: currUserIdCount});
+	io.emit('cookies', {userObj: user, userCount: currUserIdCount, usernameCount: userCounter});
+	userCounter++;
 
 	// Send message
     socket.on('chat message', function(data){    	
     	if (data.msg.startsWith("/nickcolor")) {
     		changeColour(data.id, data.msg.split(" ")[1]);
     		io.emit('refresh session', msgArray);
-    	} else if (data.msg.startsWith("/nick")) {
+    	} 
+    	else if (data.msg.startsWith("/nick")) {
     		changeNickname(data.id, data.msg.split(" ")[1]);
-    	} else {
+    		io.emit('refresh session', msgArray);
+    	} 
+    	else {
 			let currColour = findColour(data.id);
 
 			// Time stuff taken from: http://stackoverflow.com/questions/18229022/how-to-show-current-time-in-javascript-in-the-format-hhmmss
 			let time = new Date();
 			let currTime = ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2);
 
-			console.log(currTime);
 			let msgObj = {
 				userID: data.id,
+				username: data.name,
 				time: currTime,
 				msg: data.msg,
 				colour: currColour
@@ -91,8 +97,6 @@ io.on('connection', function(socket){
 
         	io.emit('chat message', msgObj);
     	}
-
-    	
     });
 
     socket.on('user id used', function(data) {
