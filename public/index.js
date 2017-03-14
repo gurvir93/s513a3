@@ -11,7 +11,7 @@ function msgOutput(msgObj) {
 	let userName = document.createElement("span");
 
 	userName.style.color = "#" + msgObj.colour;
-	userMsgCon.appendChild(userMsg).appendChild(userName).textContent = msgObj.msg;
+	userMsgCon.appendChild(userMsg).appendChild(userName).textContent = msgObj.time + " " + msgObj.msg;
 };
 
 function newSession(array) {

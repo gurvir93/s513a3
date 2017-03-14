@@ -75,16 +75,20 @@ io.on('connection', function(socket){
     		changeNickname(data.id, data.msg.split(" ")[1]);
     	} else {
 			let currColour = findColour(data.id);
-			
+
+			// Time stuff taken from: http://stackoverflow.com/questions/18229022/how-to-show-current-time-in-javascript-in-the-format-hhmmss
+			let time = new Date();
+			let currTime = ("0" + time.getHours()).slice(-2) + ":" + ("0" + time.getMinutes()).slice(-2);
+
+			console.log(currTime);
 			let msgObj = {
 				userID: data.id,
-				time: "",
+				time: currTime,
 				msg: data.msg,
 				colour: currColour
 			};
 			msgArray.push(msgObj);
 
-			console.log("Message array: " + JSON.stringify(msgArray));
         	io.emit('chat message', msgObj);
     	}
 
