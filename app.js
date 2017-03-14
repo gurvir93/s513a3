@@ -18,13 +18,6 @@ let user = {
     status: ""
 };
 
-let msgObj = {
-	userId: "",
-	time: "",
-	msg: "",
-	colour: ""
-};
-
 let msgArray = [];
 let userArray = [];
 let currUserIdCount = 0;
@@ -51,7 +44,9 @@ function changeColour(userID, value) {
 		}
 	}
 	for (let i = 0; i < msgArray.length; i++) {
-
+		if (msgArray[i].userID == userID) {
+			msgArray[i].colour = value;
+		}
 	}
 };
 
@@ -65,19 +60,32 @@ function changeNickname(userID, value) {
 };
 
 io.on('connection', function(socket){
-	io.emit('new user', msgArray);
+	// New user
+	io.emit('refresh session', msgArray);
+
+	// Emit cookie check
 	io.emit('cookies', {userObj: user, userCount: currUserIdCount});
 
 	// Send message
     socket.on('chat message', function(data){    	
     	if (data.msg.startsWith("/nickcolor")) {
-    		changeColour(data.id, data.msg.split(" ")[1])
+    		changeColour(data.id, data.msg.split(" ")[1]);
+    		io.emit('refresh session', msgArray);
     	} else if (data.msg.startsWith("/nick")) {
     		changeNickname(data.id, data.msg.split(" ")[1]);
     	} else {
 			let currColour = findColour(data.id);
-			msgArray.push({msg: data.msg, colour: currColour});
-        	io.emit('chat message', {msg: data.msg, colour: currColour});
+			
+			let msgObj = {
+				userID: data.id,
+				time: "",
+				msg: data.msg,
+				colour: currColour
+			};
+			msgArray.push(msgObj);
+
+			console.log("Message array: " + JSON.stringify(msgArray));
+        	io.emit('chat message', msgObj);
     	}
 
     	

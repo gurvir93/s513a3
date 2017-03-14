@@ -64,11 +64,12 @@ chatForm.submit(function(){
 	return false;
 });
 
-socket.on('new user', function(data){
+socket.on('refresh session', function(data){
 	newSession(data);
 });
 
 socket.on('chat message', function(data){
+	console.log("Message object: " + JSON.stringify(data));
 	msgOutput(data);
 });
 
