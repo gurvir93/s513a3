@@ -32,8 +32,11 @@ function userOutput(userObj) {
 	let userListItem = document.createElement("li");
 	let userStyle = document.createElement("span");
 
-	if(userObj.id === getCookie("id")) {
+	if(userObj.id.toString() === getCookie("id")) {
+		userStyle.style.border = "1px solid #ffffff"
+		userStyle.style.borderRadius = "3px"
 		userStyle.style.fontWeight = "bold";
+		userStyle.style.padding = "2px"
 	}
 	if(userObj.colour === "000000") {
 		userStyle.style.color = "#ffffff";
@@ -97,6 +100,9 @@ function cookieHandler(user, currUserIdCount, usernameCount) {
     		status: "o"
 		};
 		
+		if(currUserIdCount.toString() === getCookie('id')) {
+			alert("Your username is " + currUsername);
+		}
 		socket.emit('user id used', user);		
 	} else {
 		console.log("Cookie value: " + document.cookie);
