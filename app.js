@@ -13,6 +13,7 @@ io.attach(server);
 
 let user = {
     id: "",
+    sessionid: "",
     name: "",
     colour: "",
     status: ""
@@ -85,9 +86,24 @@ io.on('connection', function(socket){
     	} 
     	else if (data.msg.startsWith("/nick")) {
     		let nick = data.msg.split(" ")[1];
-    		changeNickname(data.id, nick);
-    		io.emit('name change', {id: data.id, nickname: nick});
-    		io.emit('refresh session', {userA: userArray, msgA: msgArray});
+    		let taken = false;
+    		for(let i = 0; i < userArray.length; i++) {
+    			if(userArray[i].name === nick) {
+    				taken = true;
+    				break;
+    			}
+    		}
+    		if (taken) {
+    			io.emit('user alert', {id: data.id, alertMsg: "Nickname already taken, please select another."});
+    		}
+    		else if (nick === '') {
+    			io.emit('user alert', {id: data.id, alertMsg: "No nickname entered, format: '/nick username'"});
+    		}
+    		else {
+    			changeNickname(data.id, nick);
+    			io.emit('name change', {id: data.id, nickname: nick});
+    			io.emit('refresh session', {userA: userArray, msgA: msgArray});
+    		}
     	} 
     	else {
 			let currColour = findColour(data.id);
@@ -111,24 +127,34 @@ io.on('connection', function(socket){
 
     socket.on('user id used', function(data) {
     	currUserIdCount++;
+    	data.sessionid = socket.id;
     	userArray.push(data);
     	console.log("User array: " + JSON.stringify(userArray));
     	io.emit('refresh session', {userA: userArray, msgA: msgArray});
     });
 
-    socket.on('disconnect', function(data){
-    	console.log("User Disconnected.");
-    	io.emit("user disconnected", userArray);
+    socket.on('update sessionid', function(data) {
+    	for(let i = 0; i < userArray.length; i++) {
+    		if (userArray[i].id == data) {
+    			userArray[i].sessionid = socket.id;
+    			userArray[i].status = "o";
+    			console.log("Reconnected User: " + JSON.stringify(userArray[i]));
+    			break;
+    		}
+    	}
+    	io.emit('refresh session', {userA: userArray, msgA: msgArray});
     });
 
-    socket.on('user disconnected', function(data) {
-    	console.log("Disconnected ID: " + data);
+    socket.on('disconnect', function(){
+    	console.log("User Disconnected.");
+    	
     	for(let i = 0; i < userArray.length; i++) {
-    		if (userArray[i].id === data) {
-    			userArray[i].status = 'd';
+    		if (userArray[i].sessionid === socket.id) {
+    			userArray[i].status = "d";
     		}
     	}
 
+    	io.emit('refresh session', {userA: userArray, msgA: msgArray});
     });
 });
 

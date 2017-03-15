@@ -100,6 +100,7 @@ function cookieHandler(user, currUserIdCount, usernameCount) {
 		socket.emit('user id used', user);		
 	} else {
 		console.log("Cookie value: " + document.cookie);
+		socket.emit('update sessionid', getCookie('id'));
 	}
 };
 
@@ -131,6 +132,8 @@ socket.on('name change', function(data){
 	}
 });
 
-socket.on('user disconnected', function(data){
-	socket.emit("user disconnected", getCookie("id"));
+socket.on('user alert', function(data){
+	if(data.id === getCookie('id')) {
+		alert(data.alertMsg);
+	}
 });
