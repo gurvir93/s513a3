@@ -2,21 +2,44 @@
 <html>
     <head>
         <title>Socket.IO chat</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
+
+        <link rel="stylesheet" href="bootstrap/css/bootstrap.css">
+        <link rel="stylesheet" href="style.css">
+        
         <script src="socket.io.js"></script>
         <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     </head>
     <body>
-        <div id="container">
-            <div id="msgcontainer">
-                <ul id="messages"></ul>
-                <form id="chatform" action="">
-                    <input id="chatmsg" autocomplete="off" /><button>Send</button>
-                </form>
-                <script src="index.js"></script>
+        <div class="container">
+
+            <div id="rowhead" class="row">
+                <h3>Chat Application</h3>
             </div>
-            <div id="usercontainer">
+
+            <div id="msgrow" class="row">
+
+                <div id="usercontainer" class="col-xs-4">
+                    <h4>Online Users:</h4>
+                    <ul id="onlineusers"></ul>
+                </div>
+
+                <div id="msgcontainer" class="col-xs-8">
+                    <ul id="messages"></ul>
+                </div>
+
+            </div>
             
+            <div id="inputrow" class="row">
+                <div id="usercontainer" class="col-xs-4">
+                    <h5>Enter message:</h5>
+                </div>
+                <div class="col-xs-8">
+                    <form id="chatform" action="">
+                        <input id="chatmsg" autocomplete="off" /><button class="btn btn-default">Send</button>
+                    </form>
+                </div>
             </div>
+        </div>
+        <script src="index.js"></script>
     </body>
 </html>
