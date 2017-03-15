@@ -130,3 +130,7 @@ socket.on('name change', function(data){
 			document.cookie = "username=" + data.nickname;
 	}
 });
+
+socket.on('user disconnected', function(data){
+	socket.emit("user disconnected", getCookie("id"));
+});

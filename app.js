@@ -73,7 +73,7 @@ io.on('connection', function(socket){
 	// Emit cookie check
 	io.emit('cookies', {userObj: user, userCount: currUserIdCount, usernameCount: userCounter});
 	userCounter++;
-	
+
 	io.emit('refresh session', {userA: userArray, msgA: msgArray});
 
 	
@@ -118,6 +118,17 @@ io.on('connection', function(socket){
 
     socket.on('disconnect', function(data){
     	console.log("User Disconnected.");
+    	io.emit("user disconnected", userArray);
+    });
+
+    socket.on('user disconnected', function(data) {
+    	console.log("Disconnected ID: " + data);
+    	for(let i = 0; i < userArray.length; i++) {
+    		if (userArray[i].id === data) {
+    			userArray[i].status = 'd';
+    		}
+    	}
+
     });
 });
 
