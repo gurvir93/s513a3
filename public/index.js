@@ -20,12 +20,23 @@ function scrollToBottom() {
 function msgOutput(msgObj) {
 	let userMsgList = document.createElement("li");
 	let msgStyle = document.createElement("span");
+	
+	msgList.appendChild(userMsgList).appendChild(msgStyle).textContent = msgObj.time + " ";
+
+	msgStyle = document.createElement("span");
 
 	if(msgObj.userID === getCookie("id")) {
 		msgStyle.style.fontWeight = "bold";
 	}
 	msgStyle.style.color = "#" + msgObj.colour;
-	msgList.appendChild(userMsgList).appendChild(msgStyle).textContent = msgObj.time + " " + msgObj.username + ": " + msgObj.msg;
+
+	msgList.appendChild(userMsgList).appendChild(msgStyle).textContent += msgObj.username;
+
+	msgStyle = document.createElement("span");
+
+	msgList.appendChild(userMsgList).appendChild(msgStyle).textContent += ": " + msgObj.msg;
+
+
 };
 
 function userOutput(userObj) {
