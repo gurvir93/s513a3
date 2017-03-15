@@ -5,6 +5,16 @@ let chatForm = $('#chatform');
 let msgWindow = $('#messages');
 
 let userMsgCon = document.getElementById('messages');
+let msgContainer = document.getElementById('msgcontainer');
+
+
+// Reference: http://stackoverflow.com/questions/24772491/auto-scroll-to-bottom-div
+function scrollToBottom() {
+	$(document).ready(function(){
+    	$('#msgcontainer').animate({
+        	scrollTop: $('#msgcontainer')[0].scrollHeight});
+	});
+};
 
 function msgOutput(msgObj) {
 	let userMsg = document.createElement("li");
@@ -22,6 +32,7 @@ function newSession(array) {
 	for (let i in array) {
 			msgOutput(array[i]);
 	}
+	scrollToBottom();
 };
 
 // Taken from https://www.w3schools.com/js/js_cookies.asp
@@ -80,6 +91,7 @@ socket.on('refresh session', function(data){
 socket.on('chat message', function(data){
 	console.log("Message object: " + JSON.stringify(data));
 	msgOutput(data);
+	scrollToBottom();
 });
 
 socket.on('cookies', function(data){
