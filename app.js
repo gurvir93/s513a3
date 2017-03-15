@@ -59,6 +59,11 @@ function changeNickname(userID, value) {
 			break;
 		}
 	}
+	for (let i = 0; i < msgArray.length; i++) {
+		if (msgArray[i].userID == userID) {
+			msgArray[i].username = value;
+		}
+	}
 };
 
 io.on('connection', function(socket){
@@ -76,7 +81,9 @@ io.on('connection', function(socket){
     		io.emit('refresh session', msgArray);
     	} 
     	else if (data.msg.startsWith("/nick")) {
-    		changeNickname(data.id, data.msg.split(" ")[1]);
+    		let nick = data.msg.split(" ")[1];
+    		changeNickname(data.id, nick);
+    		io.emit('name change', {id: data.id, nickname: nick});
     		io.emit('refresh session', msgArray);
     	} 
     	else {

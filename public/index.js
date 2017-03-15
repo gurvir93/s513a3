@@ -97,3 +97,9 @@ socket.on('chat message', function(data){
 socket.on('cookies', function(data){
 	cookieHandler(data.userObj, data.userCount, data.usernameCount);
 });
+
+socket.on('name change', function(data){
+	if(data.id == getCookie("id")) {
+			document.cookie = "username=" + data.nickname;
+	}
+});
