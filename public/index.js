@@ -25,14 +25,19 @@ function msgOutput(msgObj) {
 
 	msgStyle = document.createElement("span");
 
+	msgStyle.style.color = "#" + msgObj.colour;
+
 	if(msgObj.userID === getCookie("id")) {
 		msgStyle.style.fontWeight = "bold";
 	}
-	msgStyle.style.color = "#" + msgObj.colour;
-
+	
 	msgList.appendChild(userMsgList).appendChild(msgStyle).textContent += msgObj.username;
 
 	msgStyle = document.createElement("span");
+
+	if(msgObj.userID === getCookie("id")) {
+		msgStyle.style.fontWeight = "bold";
+	}
 
 	msgList.appendChild(userMsgList).appendChild(msgStyle).textContent += ": " + msgObj.msg;
 
