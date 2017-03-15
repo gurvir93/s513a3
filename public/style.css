@@ -36,6 +36,12 @@ h5 {
 	background-color: #2B2D42;
 }
 
+#botleftbox {
+	border-top: 1px solid #8D99AE;
+    height: 100%;
+	background-color: #2B2D42;
+}
+
 form {
 	padding: 3px;
 	bottom: 0;
@@ -53,9 +59,15 @@ form button {
     min-width: 65px;
 }
 
-#messages {
+#messages, #userson {
 	list-style-type: none;
 }
+
+#userson li {
+	padding: 5px 10px;
+    border-radius: 3px;
+}
+
 #messages li {
 	padding: 5px 10px;
     border-radius: 3px;
@@ -69,7 +81,7 @@ form button {
     height: 500px;
 	overflow-y: scroll;
 }
-#onlineusers {
+#userson {
 	height: 500px;
 	overflow-y: auto;
 }

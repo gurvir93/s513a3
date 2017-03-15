@@ -68,23 +68,26 @@ function changeNickname(userID, value) {
 
 io.on('connection', function(socket){
 	// New user
-	io.emit('refresh session', msgArray);
+	console.log("User Connected.");
 
 	// Emit cookie check
 	io.emit('cookies', {userObj: user, userCount: currUserIdCount, usernameCount: userCounter});
 	userCounter++;
+	
+	io.emit('refresh session', {userA: userArray, msgA: msgArray});
 
+	
 	// Send message
     socket.on('chat message', function(data){    	
     	if (data.msg.startsWith("/nickcolor")) {
     		changeColour(data.id, data.msg.split(" ")[1]);
-    		io.emit('refresh session', msgArray);
+    		io.emit('refresh session', {userA: userArray, msgA: msgArray});
     	} 
     	else if (data.msg.startsWith("/nick")) {
     		let nick = data.msg.split(" ")[1];
     		changeNickname(data.id, nick);
     		io.emit('name change', {id: data.id, nickname: nick});
-    		io.emit('refresh session', msgArray);
+    		io.emit('refresh session', {userA: userArray, msgA: msgArray});
     	} 
     	else {
 			let currColour = findColour(data.id);
@@ -110,6 +113,11 @@ io.on('connection', function(socket){
     	currUserIdCount++;
     	userArray.push(data);
     	console.log("User array: " + JSON.stringify(userArray));
+    	io.emit('refresh session', {userA: userArray, msgA: msgArray});
+    });
+
+    socket.on('disconnect', function(data){
+    	console.log("User Disconnected.");
     });
 });
 

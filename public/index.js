@@ -3,9 +3,10 @@ let socket = io();
 let chatMessage = $('#chatmsg');
 let chatForm = $('#chatform');
 let msgWindow = $('#messages');
+let userWindow = $('#userson');
 
-let userMsgCon = document.getElementById('messages');
-let msgContainer = document.getElementById('msgcontainer');
+let msgList = document.getElementById('messages');
+let userList = document.getElementById('userson');
 
 
 // Reference: http://stackoverflow.com/questions/24772491/auto-scroll-to-bottom-div
@@ -17,20 +18,46 @@ function scrollToBottom() {
 };
 
 function msgOutput(msgObj) {
-	let userMsg = document.createElement("li");
-	let userName = document.createElement("span");
+	let userMsgList = document.createElement("li");
+	let msgStyle = document.createElement("span");
 
-	if(msgObj.userID == getCookie("id")) {
-		userName.style.fontWeight = "bold";
+	if(msgObj.userID === getCookie("id")) {
+		msgStyle.style.fontWeight = "bold";
 	}
-	userName.style.color = "#" + msgObj.colour;
-	userMsgCon.appendChild(userMsg).appendChild(userName).textContent = msgObj.time + " " + msgObj.username + ": " + msgObj.msg;
+	msgStyle.style.color = "#" + msgObj.colour;
+	msgList.appendChild(userMsgList).appendChild(msgStyle).textContent = msgObj.time + " " + msgObj.username + ": " + msgObj.msg;
+};
+
+function userOutput(userObj) {
+	let userListItem = document.createElement("li");
+	let userStyle = document.createElement("span");
+
+	if(userObj.id === getCookie("id")) {
+		userStyle.style.fontWeight = "bold";
+	}
+	if(userObj.colour === "000000") {
+		userStyle.style.color = "#ffffff";
+	} else {
+		userStyle.style.color = "#" + userObj.colour;
+	}
+	userList.appendChild(userListItem).appendChild(userStyle).textContent = userObj.name;
 };
 
 function newSession(array) {
+	let msgArray = array.msgA;
+	let userArray = array.userA;
+
 	msgWindow.empty();
-	for (let i in array) {
-			msgOutput(array[i]);
+	userWindow.empty();
+
+	for(let i in userArray) {
+		if(userArray[i].status === 'o'){
+			userOutput(userArray[i]);
+		}
+	}
+
+	for (let i in msgArray) {
+			msgOutput(msgArray[i]);
 	}
 	scrollToBottom();
 };
